@@ -59,3 +59,60 @@ entity "student_progress" as student_progress {
   is_completed : Boolean
   updated_at : DateTime
 }
+
+entity "covered_objectives" as covered_objectives {
+  * id : UUID <<PK>>
+  --
+  student_progress_id : UUID <<FK>>
+  objective_id : UUID <<FK>>
+  covered_at : DateTime
+}
+
+
+entity "score_logs" as score_logs {
+  * id : UUID <<PK>>
+  --
+  student_id : UUID <<FK>>
+  course_id : UUID <<FK>>
+  activity_id : UUID <<FK>>
+  objective_id : UUID <<FK>>
+  score_delta : Integer
+  metadata_json : JSONB
+  created_at : DateTime
+}
+
+
+entity "manual_grades" as manual_grades {
+  * id : UUID <<PK>>
+  --
+  instructor_id : UUID <<FK>>
+  student_id : UUID <<FK>>
+  activity_id : UUID <<FK>>
+  grade : Integer
+  reason : Text
+  created_at : DateTime
+}
+
+
+users ||--o{ course_access
+courses ||--o{ course_access
+
+courses ||--o{ activities
+activities ||--o{ objectives
+
+users ||--o{ student_progress
+activities ||--o{ student_progress
+
+student_progress ||--o{ covered_objectives
+objectives ||--o{ covered_objectives
+
+student_progress ||--o{ score_logs
+objectives ||--o{ score_logs
+
+users ||--o{ manual_grades
+activities ||--o{ manual_grades
+
+@enduml
+
+
+
