@@ -47,3 +47,50 @@ def health():
 def get_courses(db: Session = Depends(get_db)):
     courses = db.query(models.Course).all()
     return courses
+
+
+@app.post("/courses")
+def create_course(course: CourseCreate, db: Session = Depends(get_db)):
+    new_course = models.Course(
+        code=course.code,
+        title=course.title
+    )
+
+    db.add(new_course)
+    db.commit()
+    db.refresh(new_course)
+
+    return new_course
+
+@app.post("/activities")
+def create_activity(activity: ActivityCreate, db: Session = Depends(get_db)):
+    try:
+        new_activity = models.Activity(
+            course_id=activity.course_id,
+            activity_number=activity.activity_number,
+            title=activity.title,
+            text=activity.text,
+            status="NOT_STARTED",
+            created_by="11111111-1111-1111-1111-111111111111"
+        )
+
+        db.add(new_activity)
+        db.commit()
+        db.refresh(new_activity)
+
+        return new_activity
+
+    except Exception as e:
+        print("ERROR:", e)
+        return {"error": str(e)}
+
+
+
+@app.get("/activities")
+def get_activities(db: Session = Depends(get_db)):
+    activities = db.query(models.Activity).all()
+    return activities
+
+print("REGISTERED ROUTES:")
+for route in app.routes:
+    print(route.path)
