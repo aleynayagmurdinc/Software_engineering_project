@@ -1,1 +1,124 @@
+@startuml
+
+hide circle
+
+skinparam linetype ortho
+
+left to right direction
+
+
+
+entity "users" as users {
+
+  * id : UUID <<PK>>
+
+  --
+
+  email : String <<unique>>
+
+  name : String
+
+  role : String
+
+  created_at : DateTime
+
+}
+
+
+
+entity "courses" as courses {
+
+  * id : UUID <<PK>>
+
+  --
+
+  code : String <<unique>>
+
+  title : String
+
+  created_at : DateTime
+
+}
+
+
+
+entity "course_access" as course_access {
+
+  * id : UUID <<PK>>
+
+  --
+
+  user_id : UUID <<FK>>
+
+  course_id : UUID <<FK>>
+
+  access_role : String
+
+}
+
+
+
+entity "activities" as activities {
+
+  * id : UUID <<PK>>
+
+  --
+
+  course_id : UUID <<FK>>
+
+  activity_number : Integer
+
+  title : String
+
+  text : Text
+
+  status : String
+
+  created_by : UUID <<FK>>
+
+  created_at : DateTime
+
+  updated_at : DateTime
+
+}
+
+
+
+entity "objectives" as objectives {
+
+  * id : UUID <<PK>>
+
+  --
+
+  activity_id : UUID <<FK>>
+
+  objective_order : Integer
+
+  description : Text
+
+}
+
+
+
+entity "student_progress" as student_progress {
+
+  * id : UUID <<PK>>
+
+  --
+
+  student_id : UUID <<FK>>
+
+  activity_id : UUID <<FK>>
+
+  current_step : Integer
+
+  score : Integer
+
+  is_completed : Boolean
+
+  updated_at : DateTime
+
+}
+
+
 
